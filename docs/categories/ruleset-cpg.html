@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Packaged recipes</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body class="bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-dark border-bottom" data-bs-theme="dark">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="../index.html">🍋 Mealy Limes Recipes</a>
+  </div>
+</nav>
+<main class="container my-4">
+
+<a href="../index.html" class="btn btn-sm btn-outline-secondary mb-3">&larr; Home</a>
+<h1 class="mb-1">Packaged</h1>
+<p class="text-body-secondary"><span id="recipe-count">5</span> recipes</p>
+<input id="recipe-filter" type="search" class="form-control mb-3" placeholder="Filter by name…" autocomplete="off">
+<div class="table-responsive shadow-sm">
+<table id="recipe-table" class="table table-striped table-hover align-middle bg-body mb-0">
+<thead class="table-light">
+<tr>
+<th role="button" class="sortable" data-key="name" data-type="text">Recipe</th>
+<th role="button" class="sortable text-end" data-key="rating" data-type="num" data-dir="desc">Approval</th>
+<th role="button" class="sortable text-end" data-key="time" data-type="num" data-dir="asc">Time</th>
+<th>Tags</th>
+</tr>
+</thead>
+<tbody>
+<tr data-name="bean burrito bowl with pace chunky salsa &amp; late july tortilla chips" data-time="25" data-rating="0.75"><td><a class="fw-semibold text-decoration-none" href="../recipes/bean-burrito-bowl-pace-chunky-salsa-late-july-tortilla-chips-19505.html">Bean Burrito Bowl with PACE Chunky Salsa &amp; LATE JULY Tortilla Chips</a></td><td class="text-end" data-order="0.75">75% <span class="text-body-secondary small">(1)</span></td><td class="text-end" data-order="25">25 min</td><td><span class="badge text-bg-light border">Vegetarian</span></td></tr><tr data-name="blueberry-oat crumble smoothie with oikos yogurt &amp; silk almond milk" data-time="5" data-rating="0.5"><td><a class="fw-semibold text-decoration-none" href="../recipes/blueberry-oat-crumble-smoothie-oikos-yogurt-silk-almond-milk-19529.html">Blueberry-Oat Crumble Smoothie with OIKOS Yogurt &amp; SILK Almond Milk</a></td><td class="text-end" data-order="0.5">50% <span class="text-body-secondary small">(1)</span></td><td class="text-end" data-order="5">5 min</td><td><span class="badge text-bg-light border">Vegetarian</span></td></tr><tr data-name="garlic-parmesan pork chop with saucy philadelphia cream cheese zoodles" data-time="30" data-rating="1.0"><td><a class="fw-semibold text-decoration-none" href="../recipes/garlic-parmesan-pork-chop-saucy-philadelphia-cream-cheese-zoodles-19523.html">Garlic-Parmesan Pork Chop with Saucy PHILADELPHIA Cream Cheese Zoodles</a></td><td class="text-end" data-order="1.0">100% <span class="text-body-secondary small">(1)</span></td><td class="text-end" data-order="30">30 min</td><td><span class="badge text-bg-light border">Meat</span></td></tr><tr data-name="mini raspberry truffle tart with oreo cookie crust &amp; whipped cream" data-time="30" data-rating="1.0"><td><a class="fw-semibold text-decoration-none" href="../recipes/mini-raspberry-truffle-tart-oreo-cookie-crust-whipped-cream-19517.html">Mini Raspberry Truffle Tart with OREO Cookie Crust &amp; Whipped Cream</a></td><td class="text-end" data-order="1.0">100% <span class="text-body-secondary small">(1)</span></td><td class="text-end" data-order="30">30 min</td><td><span class="badge text-bg-light border">Vegetarian</span></td></tr><tr data-name="spicy creole chicken, pork sausage &amp; rice jambalaya with ro-tel" data-time="40" data-rating="0.75"><td><a class="fw-semibold text-decoration-none" href="../recipes/spicy-creole-chicken-pork-sausage-rice-jambalaya-ro-tel-19313.html">Spicy Creole Chicken, Pork Sausage &amp; Rice Jambalaya with RO-TEL</a></td><td class="text-end" data-order="0.75">75% <span class="text-body-secondary small">(1)</span></td><td class="text-end" data-order="40">40 min</td><td><span class="badge text-bg-light border">Meat</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<style>
+#recipe-table tbody tr[hidden]{display:none!important}
+#recipe-table th.sortable{cursor:pointer;white-space:nowrap;user-select:none}
+#recipe-table th.sortable::after{content:"\2195";opacity:.35;margin-left:.35em}
+#recipe-table th.sortable[data-active="asc"]::after{content:"\2191";opacity:1}
+#recipe-table th.sortable[data-active="desc"]::after{content:"\2193";opacity:1}
+</style>
+<script>
+(function(){
+  var table = document.getElementById('recipe-table');
+  if(!table) return;
+  var tbody = table.tBodies[0];
+  var rows = Array.prototype.slice.call(tbody.rows);
+  var input = document.getElementById('recipe-filter');
+  var count = document.getElementById('recipe-count');
+
+  function applyFilter(){
+    var q = input ? input.value.toLowerCase() : '';
+    var shown = 0;
+    rows.forEach(function(tr){
+      var match = tr.getAttribute('data-name').indexOf(q) !== -1;
+      tr.hidden = !match;
+      if(match) shown++;
+    });
+    if(count) count.textContent = shown;
+  }
+
+  function sortBy(th){
+    var key = th.getAttribute('data-key');
+    var type = th.getAttribute('data-type');
+    var dir = th.getAttribute('data-dir') === 'asc' ? 'desc' : 'asc';
+    th.setAttribute('data-dir', dir);
+    var sign = dir === 'asc' ? 1 : -1;
+    rows.sort(function(a, b){
+      var av = a.getAttribute('data-' + key), bv = b.getAttribute('data-' + key);
+      if(type === 'num'){
+        // blanks always sort to the bottom regardless of direction
+        var ae = av === '', be = bv === '';
+        if(ae && be) return 0;
+        if(ae) return 1;
+        if(be) return -1;
+        return (parseFloat(av) - parseFloat(bv)) * sign;
+      }
+      return av < bv ? -sign : av > bv ? sign : 0;
+    });
+    rows.forEach(function(tr){ tbody.appendChild(tr); });
+    table.querySelectorAll('th.sortable').forEach(function(h){ h.removeAttribute('data-active'); });
+    th.setAttribute('data-active', dir);
+  }
+
+  table.querySelectorAll('th.sortable').forEach(function(th){
+    th.addEventListener('click', function(){ sortBy(th); });
+  });
+  if(input) input.addEventListener('input', applyFilter);
+})();
+</script>
+
+
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
